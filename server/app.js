@@ -27,14 +27,14 @@ app.use(express.json());
 
 // Your code here
 
-app.use((req, res, next) => {
-  console.log("Body:", req.body);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log("Body:", req.body);
+//   next();
+// });
 
-app.get("/", async (req, res) => {
-  res.send("Hello World");
-});
+// app.get("/", async (req, res) => {
+//   res.send("Hello World");
+// });
 
 app.get("/artists", async (req, res) => {
   const artists = await getAllArtists();
