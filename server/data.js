@@ -1,6 +1,6 @@
-const artists = require('./seeds/artists.json');
-const albums = require('./seeds/albums.json');
-const songs = require('./seeds/songs.json');
+const artists = require("./seeds/artists.json");
+const albums = require("./seeds/albums.json");
+const songs = require("./seeds/songs.json");
 
 let nextArtistId = 2;
 function newArtistId() {
@@ -37,8 +37,9 @@ exports.getLatestArtist = () => {
 
 exports.getArtistByArtistId = (artistId) => {
   const artist = { ...artists[artistId] };
-  artist.albums = Object.values(albums)
-    .filter(album => album.artistId == artist.artistId);
+  artist.albums = Object.values(albums).filter(
+    (album) => album.artistId == artist.artistId
+  );
   return artist;
 };
 
@@ -59,42 +60,40 @@ exports.editArtistByArtistId = (artistId, data) => {
 
 exports.deleteArtistByArtistId = (artistId) => {
   delete artists[artistId];
-  const artistAlbums = Object.values(albums)
-    .filter(album => album.artistId == artistId);
-  artistAlbums
-    .forEach(album => delete albums[album.albumId]);
-  const artistAlbumIds = artistAlbums.map(album => album.albumId);
-  Object.values(songs)
-    .forEach(song => {
-      if (artistAlbumIds.includes(song.albumId)) {
-        delete songs[song.songId];
-      }
-    });
+  const artistAlbums = Object.values(albums).filter(
+    (album) => album.artistId == artistId
+  );
+  artistAlbums.forEach((album) => delete albums[album.albumId]);
+  const artistAlbumIds = artistAlbums.map((album) => album.albumId);
+  Object.values(songs).forEach((song) => {
+    if (artistAlbumIds.includes(song.albumId)) {
+      delete songs[song.songId];
+    }
+  });
   return artists[artistId];
 };
 
 exports.getAlbumsForLatestArtist = () => {
   const artistsArr = Object.values(artists);
   const latestArtist = artistsArr[artistsArr.length - 1];
-  const artistAlbums = Object.values(albums)
-    .filter(album => album.artistId == latestArtist.artistId);
+  const artistAlbums = Object.values(albums).filter(
+    (album) => album.artistId == latestArtist.artistId
+  );
   return {
     latest: {
       albums: artistAlbums
-    },
+    }
   };
 };
 
 exports.getAlbumsByArtistId = (artistId) => {
-  return Object.values(albums)
-    .filter(album => album.artistId == artistId);
+  return Object.values(albums).filter((album) => album.artistId == artistId);
 };
 
 exports.getAlbumByAlbumId = (albumId) => {
   const album = { ...albums[albumId] };
   album.artist = artists[album.artistId];
-  album.songs = Object.values(songs)
-    .filter(song => song.albumId == albumId);
+  album.songs = Object.values(songs).filter((song) => song.albumId == albumId);
   return album;
 };
 
@@ -118,31 +117,32 @@ exports.editAlbumByAlbumId = (albumId, data) => {
 
 exports.deleteAlbumByAlbumId = (albumId) => {
   delete albums[albumId];
-  Object.values(songs)
-    .forEach(song => {
-      if (song.albumId == albumId) {
-        delete songs[song.songId];
-      }
-    });
+  Object.values(songs).forEach((song) => {
+    if (song.albumId == albumId) {
+      delete songs[song.songId];
+    }
+  });
   return albums[albumId];
 };
 
 exports.getFilteredAlbums = (startsWith) => {
-  if (!startsWith) return ({
-    error: "Filtered albums requires a starting letter"
-  });
+  if (!startsWith)
+    return {
+      error: "Filtered albums requires a starting letter"
+    };
 
-  return Object.values(albums)
-    .filter(album => album.name.startsWith(startsWith));
+  return Object.values(albums).filter((album) =>
+    album.name.startsWith(startsWith)
+  );
 };
 
 exports.getSongsByArtistId = (artistId) => {
   const artistAlbumIds = Object.values(albums)
-    .filter(album => album.artistId == artistId)
-    .map(album => album.albumId);
+    .filter((album) => album.artistId == artistId)
+    .map((album) => album.albumId);
   return Object.values(songs)
-    .filter(song => artistAlbumIds.includes(song.albumId))
-    .map(song => ({
+    .filter((song) => artistAlbumIds.includes(song.albumId))
+    .map((song) => ({
       songId: song.songId,
       name: song.name,
       albumId: song.albumId
@@ -151,8 +151,8 @@ exports.getSongsByArtistId = (artistId) => {
 
 exports.getSongsByAlbumId = (albumId) => {
   return Object.values(songs)
-    .filter(song => song.albumId == albumId)
-    .map(song => ({
+    .filter((song) => song.albumId == albumId)
+    .map((song) => ({
       songId: song.songId,
       name: song.name,
       albumId: song.albumId
@@ -161,8 +161,9 @@ exports.getSongsByAlbumId = (albumId) => {
 
 exports.getSongBySongId = (songId) => {
   const song = { ...songs[songId] };
-  song.album = Object.values(albums)
-    .find(album => album.albumId == song.albumId);
+  song.album = Object.values(albums).find(
+    (album) => album.albumId == song.albumId
+  );
   song.artist = artists[song.album.artistId];
   return song;
 };
